@@ -26,33 +26,35 @@ create table shipping_info as(
     shipping_id int primary key,
     vendor_id int,
     payment_amount numeric(14,3),
-    shipping_plan_datetime,
-    shipping_transfer_id,
-    shipping_agreement_id,
-    shipping_country_rate_id,
-    FOREIGN KEY (b, c) REFERENCES other_table (c1, c2)
+    shipping_plan_datetime datetime,
+    shipping_transfer_id int,
+    shipping_agreement_id int,
+    shipping_country_rate_id int,
+    FOREIGN KEY (shipping_country_rate_id) REFERENCES shipping_country_rates(id),
+    FOREIGN KEY (shipping_agreement_id) REFERENCES shipping_agreement(agreement_id),
+    FOREIGN KEY (shipping_transfer_id) REFERENCES shipping_transfer(id)
 )
 ;
 
 create table shipping_status as(
-    shipping_id,
-    status,
-    state,
-    shipping_start_fact_datetime,
-    shipping_end_fact_datetime
+    shipping_id int,
+    status varchar,
+    state varchar,
+    shipping_start_fact_datetime datetime,
+    shipping_end_fact_datetime datetime
 )
 ;
 
 create table shipping_datamart as(
-    shipping_id,
-    vendor_id,
-    transfer_type,
-    full_day_at_shipping,
-    is_delay,
-    is_shipping_finish,
-    delay_day_at_shipping,
-    vat,
-    profit
+    shipping_id int,
+    vendor_id int,
+    transfer_type varchar,
+    full_day_at_shipping int,
+    is_delay boolean,
+    is_shipping_finish boolean,
+    delay_day_at_shipping date,
+    vat numeric(14,3),
+    profit numeric(14,3)
 )
 ;
 
