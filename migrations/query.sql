@@ -1,6 +1,6 @@
 --CREATE
 create table shipping_country_rates as(
-    id SERIAL,
+    id serial,
     shipping_country text,
     shipping_country_base_rate int
 )
@@ -37,7 +37,7 @@ create table shipping_info as(
 ;
 
 create table shipping_status as(
-    shipping_id int,
+    shipping_id int primary key,
     status varchar,
     state varchar,
     shipping_start_fact_datetime datetime,
@@ -71,10 +71,10 @@ from shipping
 
 insert into shipping_agreement (agreement_id, agreement_number, agreement_rate, agreement_commission)
 select distinct
-    cast(descr[1] as int) as agreement_id,
-    cast(descr[2] as int) as agreement_number,
-    cast(descr[3] as int) as agreement_rate,
-    cast(descr[4] as int) as agreement_commission
+    cast(descr[1] as int)           as agreement_id,
+    cast(descr[2] as int)           as agreement_number,
+    cast(descr[3] as int)           as agreement_rate,
+    cast(descr[4] as int)           as agreement_commission
 from (
     select string_to_array(vendor_agreement_description, ':') AS descr, 
     from shipping
@@ -83,13 +83,33 @@ from (
 
 insert into shipping_transfer (transfer_type, transfer_model, shipping_transfer_rate)
 select distinct
-    cast(descr[1] as int) as transfer_type,
-    cast(descr[2] as int) as transfer_model,
-    cast(descr[3] as int) as shipping_transfer_rate
+    cast(descr[1] as int)           as transfer_type,
+    cast(descr[2] as int)           as transfer_model,
+    cast(descr[3] as int)           as shipping_transfer_rate
 from (
     select string_to_array(shipping_transfer_description, ':') AS descr, 
     from shipping
 )
+;
+
+insert into shipping_status (shipping_id, status, state, shipping_start_fact_datetime, shipping_end_fact_datetime)
+select distinct
+    a.shipping_id                   as shipping_id,
+    b.status                        as status,
+    b.state                         as state,
+    a.shipping_start_fact_datetime  as shipping_start_fact_datetime,
+    a.shipping_end_fact_datetime    as shipping_end_fact_datetime
+from (
+    select 
+        shipping_id,
+        min(case when state = 'booked' then state_datetime else null end)           as shipping_start_fact_datetime,
+        max(case when state = 'recieved' then state_datetime else null end)         as shipping_end_fact_datetime
+    from shipping
+    group by 
+        shipping_id
+) as a
+join shipping as b
+on a.shipping_id = b.shipping_id
 ;
 
 
