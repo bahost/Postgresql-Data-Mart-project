@@ -53,6 +53,7 @@ create table shipping_datamart as(
     is_delay boolean,
     is_shipping_finish boolean,
     delay_day_at_shipping date,
+    payment_amount numeric(14,3),
     vat numeric(14,3),
     profit numeric(14,3)
 )
@@ -112,5 +113,26 @@ join shipping as b
 on a.shipping_id = b.shipping_id
 ;
 
+insert into shipping_info (shipping_plan_datetime, payment_amount, vendor_id)
+select distinct
+    shipping_plan_datetime, 
+    payment_amount, 
+    vendor_id
+from shipping
+;
 
 
+-- DATA MART
+insert into(shipping_id, vendor_id, transfer_type, full_day_at_shipping, is_delay, is_shipping_finish, delay_day_at_shipping, payment_amount, vat, profit)
+select 
+    shipping_id,
+    vendor_id,
+    transfer_type,
+    full_day_at_shipping,
+    is_delay,
+    is_shipping_finish,
+    shipping_end_fact_datetime - shipping_plan_datetime                                     as delay_day_at_shipping,
+    payment_amount,
+    payment_amount * (shipping_country_base_rate + agreement_rate + shipping_transfer_rate) as vat,
+    payment_amount * agreement_commission                                                   as profit
+from shipping_transfer as a
