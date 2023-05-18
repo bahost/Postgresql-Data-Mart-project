@@ -24,9 +24,38 @@ create table shipping_transfer as(
 
 create table shipping_info as(
     shipping_id int primary key,
+    vendor_id int,
+    payment_amount numeric(14,3),
+    shipping_plan_datetime,
+    shipping_transfer_id,
+    shipping_agreement_id,
+    shipping_country_rate_id,
     FOREIGN KEY (b, c) REFERENCES other_table (c1, c2)
 )
 ;
+
+create table shipping_status as(
+    shipping_id,
+    status,
+    state,
+    shipping_start_fact_datetime,
+    shipping_end_fact_datetime
+)
+;
+
+create table shipping_datamart as(
+    shipping_id,
+    vendor_id,
+    transfer_type,
+    full_day_at_shipping,
+    is_delay,
+    is_shipping_finish,
+    delay_day_at_shipping,
+    vat,
+    profit
+)
+;
+
 
 
 
