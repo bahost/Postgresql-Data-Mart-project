@@ -1,12 +1,12 @@
 --CREATE
-create table shipping_country_rates as(
+create table shipping_country_rates(
     id serial,
     shipping_country text,
     shipping_country_base_rate int
 )
 ;
 
-create table shipping_agreement as(
+create table shipping_agreement(
     agreement_id int primary key,
     agreement_number int,
     agreement_rate int,
@@ -14,7 +14,7 @@ create table shipping_agreement as(
 )
 ;
 
-create table shipping_transfer as(
+create table shipping_transfer(
     id SERIAL primary key,
     transfer_type varchar,
     transfer_model varchar,
@@ -22,7 +22,7 @@ create table shipping_transfer as(
 )
 ;
 
-create table shipping_info as(
+create table shipping_info(
     shipping_id int primary key,
     vendor_id int,
     payment_amount numeric(14,3),
@@ -36,12 +36,12 @@ create table shipping_info as(
 )
 ;
 
-create table shipping_status as(
+create table shipping_status(
     shipping_id int primary key,
     status varchar,
     state varchar,
-    shipping_start_fact_datetime datetime,
-    shipping_end_fact_datetime datetime
+    shipping_start_fact_datetime timestamp,
+    shipping_end_fact_datetime timestamp
 )
 ;
 
