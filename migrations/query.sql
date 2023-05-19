@@ -45,22 +45,6 @@ create table shipping_status as(
 )
 ;
 
-create table shipping_datamart as(
-    shipping_id int,
-    vendor_id int,
-    transfer_type varchar,
-    full_day_at_shipping int,
-    is_delay boolean,
-    is_shipping_finish boolean,
-    delay_day_at_shipping date,
-    payment_amount numeric(14,3),
-    vat numeric(14,3),
-    profit numeric(14,3)
-)
-;
-
-
-
 
 -- INSERT
 insert into shipping_country_rates (shipping_country, shipping_country_base_rate)
@@ -113,26 +97,47 @@ join shipping as b
 on a.shipping_id = b.shipping_id
 ;
 
-insert into shipping_info (shipping_plan_datetime, payment_amount, vendor_id)
+insert into shipping_info (shipping_id, vendor_id, payment_amount, shipping_plan_datetime, shipping_transfer_id, shipping_agreement_id, shipping_country_rate_id)
 select distinct
-    shipping_plan_datetime, 
-    payment_amount, 
-    vendor_id
-from shipping
+    t1.shipping_id, 
+    t1.vendor_id, 
+    t1.payment_amount, 
+    t1.shipping_plan_datetime, 
+    t2.id as shipping_transfer_id, 
+    t1.agreement_id as shipping_agreement_id, 
+    t3.id as shipping_country_rate_id
+from(
+    select 
+        shipping_id, 
+        vendor_id, 
+        payment_amount, 
+        shipping_plan_datetime,
+        string_to_array(shipping_transfer_description, ':')[1] AS transfer_type,
+        string_to_array(vendor_agreement_description, ':')[1] AS agreement_id
+    from shipping
+) as t1
+left join shipping_transfer as t2
+    on t1.transfer_type = t2.transfer_type
+left join shipping_country_rates as t3
+    on t1.shipping_country = t3.shipping_country
 ;
 
 
 -- DATA MART
-insert into(shipping_id, vendor_id, transfer_type, full_day_at_shipping, is_delay, is_shipping_finish, delay_day_at_shipping, payment_amount, vat, profit)
+create or replace view shipping_datamart as
 select 
-    shipping_id,
-    vendor_id,
-    transfer_type,
-    full_day_at_shipping,
+    t1.shipping_id,
+    t1.vendor_id,
+    t2.transfer_type,
+    date_part(’day’, age(shipping_start_fact_datetime, shipping_end_fact_datetime)) as full_day_at_shipping,
     is_delay,
     is_shipping_finish,
     shipping_end_fact_datetime - shipping_plan_datetime                                     as delay_day_at_shipping,
-    payment_amount,
-    payment_amount * (shipping_country_base_rate + agreement_rate + shipping_transfer_rate) as vat,
-    payment_amount * agreement_commission                                                   as profit
-from shipping_transfer as a
+    t1.payment_amount,
+    t1.payment_amount * (shipping_country_base_rate + agreement_rate + shipping_transfer_rate) as vat,
+    t1.payment_amount * agreement_commission                                                   as profit
+from shipping_info as t1
+left join shipping_transfer as t2
+    on t1.shipping_transfer_id = t2.id
+
+
