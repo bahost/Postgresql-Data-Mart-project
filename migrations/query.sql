@@ -122,6 +122,8 @@ left join shipping_country_rates as t3
     on t1.shipping_country = t3.shipping_country
 ;
 
+-- DATA MART
+create or replace view shipping_datamart as
 with shipping_finish as(
     select distinct
         shipping_id
@@ -135,8 +137,6 @@ with shipping_finish as(
         and t1.rn = 1
         and t1.status = 'finished'
 )
--- DATA MART
-create or replace view shipping_datamart as
 select 
     t1.shipping_id as shipping_id,
     t1.vendor_id as vendor_id,
