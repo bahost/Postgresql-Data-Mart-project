@@ -143,7 +143,7 @@ select
     t2.transfer_type as transfer_type,
     date_part(’day’, age(t3.shipping_start_fact_datetime, t3.shipping_end_fact_datetime))               as full_day_at_shipping,
     if(t3.shipping_end_fact_datetime > t1.shipping_plan_datetime, 1, 0)                                 as is_delay,
-    if(t4.shipping_id is not null, True, False)                                                         as is_shipping_finish,
+    if(t4.shipping_id is not null, 1, 0)                                                         as is_shipping_finish,
     t3.shipping_end_fact_datetime - t1.shipping_plan_datetime                                           as delay_day_at_shipping,
     t1.payment_amount as payment_amount,
     t1.payment_amount * (t5.shipping_country_base_rate + t6.agreement_rate + t2.shipping_transfer_rate) as vat,
