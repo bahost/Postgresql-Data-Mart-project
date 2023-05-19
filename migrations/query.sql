@@ -26,7 +26,7 @@ create table shipping_info(
     shipping_id int primary key,
     vendor_id int,
     payment_amount numeric(14,3),
-    shipping_plan_datetime datetime,
+    shipping_plan_datetime timestamp,
     shipping_transfer_id int,
     shipping_agreement_id int,
     shipping_country_rate_id int,
