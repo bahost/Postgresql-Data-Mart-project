@@ -122,7 +122,7 @@ left join shipping_country_rates as t3
     on t1.shipping_country = t3.shipping_country
 ;
 
--- DATA MART
+-- DATA MART 
 create or replace view shipping_datamart as
 with shipping_finish as(
     select distinct
