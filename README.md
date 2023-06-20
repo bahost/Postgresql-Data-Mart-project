@@ -1,32 +1,4 @@
-# Проект 2-го спринта
+# Postgresql project description:
+### This PostgreSQL GitHub project demonstrates the power of advanced SQL techniques and features to design, develop, and create a performant and versatile data mart that provides valuable insights for businesses. 
 
-### Описание
-Репозиторий предназначен для сдачи проекта 2-го спринта. 
-
-### Как работать с репозиторием
-1. В вашем GitHub-аккаунте автоматически создастся репозиторий `de-project-sprint-2` после того, как вы привяжете свой GitHub-аккаунт на Платформе.
-2. Скопируйте репозиторий на свой локальный компьютер, в качестве пароля укажите ваш `Access Token` (получить нужно на странице [Personal Access Tokens](https://github.com/settings/tokens)):
-	* `git clone https://github.com/{{ username }}/de-project-sprint-2.git`
-3. Перейдите в директорию с проектом: 
-	* `cd de-project-sprint-2`
-4. Выполните проект и сохраните получившийся код в локальном репозитории:
-	* `git add .`
-	* `git commit -m 'my best commit'`
-5. Обновите репозиторий в вашем GutHub-аккаунте:
-	* `git push origin main`
-
-### Структура репозитория
-Папка `migrations` хранит файлы миграции. 
-Файлы миграции должны быть с расширением `.sql` и содержать SQL-скрипт обновления базы данных.
-
-### Как запустить контейнер
-Запустите локально команду:
-
-```
-docker run -d --rm -p 3000:3000 -p 15432:5432 --name=de-project-sprint-2-server sindb/project-sprint-2:latest
-```
-
-После того как запустится контейнер, у вас будут доступны:
-1. CloudBeaver
-2. PostgreSQL
-3. VSCode
+### Making use of Common Table Expressions (CTEs), window functions, and Data Definition Language (DDL) statements, the project showcases a comprehensive approach to modeling and organizing data to empower analytic processes and decision-making.
